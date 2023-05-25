@@ -1,0 +1,318 @@
+const textElement = document.getElementById('text')
+const optionButtonsElement = document.getElementById('option-buttons')
+
+let state = {}
+
+function startgame() {
+    state = {}
+    showTextNode(1)
+}
+
+function showTextNode(textNodeIndex) {
+    const textNode = textNodes.find(textNode => textNode.id === textNodeIndex)
+    textElement.innerText = textNode.text
+    while (optionButtonsElement.firstChild) {
+        optionButtonsElement.removeChild(optionButtonsElement.firstChild)
+    }
+
+    textNode.options.forEach(option => {
+        if (showOption(option)) {
+            const button = document.createElement('button')
+            button.innerText = option.text
+            button.classList.add('btn')
+            button.addEventListener('click', () => selectOption(option))
+            optionButtonsElement.appendChild(button)
+        }
+    })
+}
+
+function showOption(option) {
+    return option.requiredState == null || option.requiredState(state)
+}
+
+function selectOption(option) {
+    const nextTextNodeId = option.nextText
+    if (nextTextNodeId <= 0) {
+        return startgame()
+    }
+    state = Object.assign(state, option.setState)
+    showTextNode(nextTextNodeId)
+}
+
+const textNodes = [
+    {
+        id: 1,
+        text: "You've walked into a bar. What do you do?",
+        options: [
+            {
+                text: 'Talk to the lonely man in the corner',
+                setState: { talkedtolonelyman: true },
+                nextText: 2
+            },
+            {
+                text: "Buy yourself a drink",
+                setState: { drunk: true },
+                nextText: 3
+            }
+        ]
+    },
+    {
+        id: 2,
+        text: "The man starts telling you a story.",
+        options: [
+            {
+                text: 'Ignore Him',
+                requiredState: (currentState) => currentState.talkedtolonelyman,
+                setState: { talkedtolonelyman: true, drunk: false },
+                nextText: 7
+            },
+            {
+                text: 'Listen',
+                nextText: 5
+            },
+         ]
+    },
+    {
+        id: 3,
+        text: "The bartender offers you today's special. Do you...",
+        options: [
+            {
+                text: 'Order It',
+                nextText: 6
+            },
+            {
+                text: 'Decline Offer',
+                nextText: 4
+            }
+        ]
+    },
+    {
+        id: 4,
+        text: "The bartender is offended and kicks you out.",
+        options: [
+            {
+                text: 'Restart',
+                nextText: -1
+            }
+        ]
+    },
+    {
+        id: 5,
+        text: "You had a mostly one-sided discussion. Apparently, he works in a zoo or something.",
+        options: [
+            {
+                text: 'OK',
+                nextText: 8 
+            }
+        ]
+    }, 
+    {
+        id: 6,
+        text: "You order the special. It tastes sour.",
+        options: [
+            {
+                text: 'OK',
+                nextText: 8 
+            }
+        ]
+    }, 
+    {
+        id: 7,
+        text: "The lonely man notices that you weren't listening. He gets mad and smashes you over the head with a shot glass.",
+        options: [
+            {
+                text: 'Ouch.',
+                nextText: -1 
+            }
+        ]
+    },    
+    {
+        id: 8,
+        text: "CRASH! Suddenly, an elephant crashes through the wall! What do you do?",
+        options: [
+            {
+                    text: 'Save the man!',
+                    nextText: 11
+            },
+            {
+                    text: 'Save your drink!',
+                    requiredState: (currentState) => currentState.drunk,
+                    nextText: 10
+            },
+            {
+                    text: 'Give the elephant a smooch.',
+                    nextText: 9
+            }
+            
+        ]
+    },
+    {
+        id: 9,
+        text: "Unfortunately, the elephant eats you before you can romance him.",
+        options: [
+            {
+                text: 'Restart',
+                nextText: -1
+            }
+        ]
+    },
+    {
+        id: 10,
+        text: "The special drink you ordered gives you super speed! You quickly grab the rest of your drink and run away.",
+        options: [
+            {
+                text: 'You survived! Congratulations.',
+                nextText: -1
+            }
+        ]
+    },
+    {
+        id: 11,
+        text: "You jump in front of the lonely man, putting yourself between him and the elephant. The man runs away.",
+        options: [
+            {
+                text: '...',
+                nextText: 12
+            },
+         ]
+    },
+    {
+        id: 12,
+        text: "Tell me, did this man know you?",
+        options: [
+            {
+                text: 'Yes',
+                requiredState: (currentState) => currentState.talkedtolonelyman,
+                nextText: 13
+            },
+            {
+                text: 'No',
+                nextText: 14
+            },
+         ]
+    },
+    {
+        id: 13,
+        text: "Just as you're about to be elephant-ed to death, the man returns, holding a whistle in his hand.",
+        options: [
+            {
+                text: 'Take the whistle',
+                nextText: 17
+            },
+            {
+                text: 'Not take the whistle.',
+                nextText: 18
+            }
+         ]
+    },
+    {
+        id: 14,
+        text: "The elephant swings it's trunk at you. The force of it slams you into the wall.",
+        options: [
+            {
+                text: 'OK',
+                nextText: 15
+            }
+         ]
+    },
+    {
+        id: 15,
+        text: "As you lose consciousness, you hear one final sound...",
+        options: [
+            {
+                text: '...',
+                nextText: 16
+            }
+         ]
+    },    
+    {
+        id: 16,
+        text: "'BRWHHHEHHHHRHRRRRRR!!!' (the beautiful cry of an elephant.)",
+        options: [
+            {
+                text: 'Aw man! :(',
+                nextText: -1
+            }
+         ]
+    },
+    {
+        id: 17,
+        text: "The man looks at you like you just kicked a puppy. He shoves you into the elephant's line of wrath.",
+        options: [
+            {
+                text: '... Why did you think that would be a good idea?',
+                nextText: -1
+            }
+        ]
+    },
+    {
+        id: 18,
+        text: "The man smiles at you and blows his whistle.",
+        options: [
+            {
+                text: 'OK',
+                nextText: 19
+            }
+        ]
+    },
+    {
+        id: 19,
+        text: "The elephant suddenly stops destroying stuff. The man shoo-es him away like a pet dog.",
+        options: [
+            {
+                text: 'OK',
+                nextText: 20
+            }
+        ]
+    },
+    {
+        id: 20,
+        text: "The man explains that he works at the zoo the elephant escaped from.",
+        options: [
+            {
+                text: 'Small world, huh?',
+                nextText: 21
+            }
+        ]
+    },
+    {
+        id: 21,
+        text: "Congratulations! You've survived, and made a new friend along the way!",
+        options: [
+            {
+                text: 'Restart?',
+                nextText: -1
+            }
+        ]
+    }
+]
+
+
+startgame()
+
+
+
+/* template 
+    {
+        id: #
+        text: "asdf",
+        options: [
+            {
+                text: 'option1text',
+                requiredState: (currentState) => currentState.-,
+                setState: { -: true, -: false },
+                nextText: #
+            },
+            {
+                text: 'option2text',
+                requiredState: (currentState) => currentState.-,
+                setState: { -: true },
+                nextText: #
+            },
+            {
+                text: 'option3text',
+                nextText: #   
+            }
+        ]
+    },
+*/
