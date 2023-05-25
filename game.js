@@ -1,6 +1,9 @@
 const textElement = document.getElementById('text')
 const optionButtonsElement = document.getElementById('option-buttons')
 
+// The above code establishes what text and option-buttons apply to.
+// The code below makes sure you have no states set When the game is started.
+
 let state = {}
 
 function startgame() {
@@ -8,12 +11,17 @@ function startgame() {
     showTextNode(1)
 }
 
+// This portion covers what a TextNode is and where to find it.
+
 function showTextNode(textNodeIndex) {
     const textNode = textNodes.find(textNode => textNode.id === textNodeIndex)
     textElement.innerText = textNode.text
     while (optionButtonsElement.firstChild) {
         optionButtonsElement.removeChild(optionButtonsElement.firstChild)
     }
+    
+// The questions (in a specific textnode) should be connected to the option buttons.
+// Then move on to the next option we provide and make a new button.
 
     textNode.options.forEach(option => {
         if (showOption(option)) {
@@ -26,9 +34,16 @@ function showTextNode(textNodeIndex) {
     })
 }
 
+// For options, apply it to the "btn" class and put the option text in it.
+// Base what text is put in the individual option buttons off that textNode's stuff.
+// The EventListener is waiting for us to click the buttons and it reacts accordingly.
+
 function showOption(option) {
     return option.requiredState == null || option.requiredState(state)
 }
+
+// Below is telling it to go to the next TextNode when an option is selected.
+// or to restart the game if the nextText number is lesser than or equal to 0.
 
 function selectOption(option) {
     const nextTextNodeId = option.nextText
@@ -38,6 +53,12 @@ function selectOption(option) {
     state = Object.assign(state, option.setState)
     showTextNode(nextTextNodeId)
 }
+
+// The following is each question and it's options!
+// The ID clarifies which question it is, and nextText uses that to know 
+// - which question to go to next.
+
+// SetState says if you've done something yet or not, like if you've gotten a drink.
 
 const textNodes = [
     {
@@ -287,6 +308,7 @@ const textNodes = [
     }
 ]
 
+// Once all this is done, restart the game.
 
 startgame()
 

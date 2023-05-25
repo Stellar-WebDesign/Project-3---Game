@@ -1,3 +1,5 @@
+
+/*The body tag means the following code will apply to everything unless told otherwise.*/
 body {
     padding: 0;
     margin: 0;
@@ -10,6 +12,8 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/*This applies to what we stored in "container" in the HTML doc.*/
+
 .container {
     width: 800px;
     max-width: 80%;
@@ -18,16 +22,20 @@ body {
     border-radius: 10px;
 }
 
+
+/*Stuff for only the options.*/
 .optionclass {
     margin-top: 20px;
 }
 
+/*Stuff that applies to the individual buttons.*/
 .btn {
     background-color:rgb(250, 255, 174);
     border: 2px solid rgb(204, 210, 128);
     border-radius: 10px;
 }
 
+/*The hover thing makes the colors change when you hover over an option.*/
 .btn:hover {
     background-color:rgb(204, 210, 128);
     border-color:rgb(163, 168, 85);
